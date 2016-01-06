@@ -24,15 +24,19 @@ import java.util.List;
 
 public class AntivirusActivity extends Activity {
 
-    private static final int BEGIN = 0;
-    private static final int SCANING = 1;
-    private static final int END = 3;
+    // 扫描开始
+    protected static final int BEGING = 1;
+    // 扫描中
+    protected static final int SCANING = 2;
+    // 扫描结束
+    protected static final int FINISH = 3;
+    private Message message;
     @ViewInject(R.id.iv_animimage)
     private ImageView iv_animimage;
     @ViewInject(R.id.tv_text)
     private TextView tv_text;
     @ViewInject(R.id.pb_proce)
-    private ProgressBar pb_proce;
+    private ProgressBar pb;
     @ViewInject(R.id.ll_listitems)
     private LinearLayout ll_listitems;
     @ViewInject(R.id.sc_scorll)
@@ -67,14 +71,14 @@ public class AntivirusActivity extends Activity {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what){
-                case BEGIN:
+                case BEGING:
                     tv_text.setText("正在初始化杀毒引擎");
                     break;
                 case SCANING:
                     tv_text.setText("正在使用本地病毒库杀毒");
-                    AntivirusInfo info = (AntivirusInfo) msg.obj;
+                    ScanInfo info = (ScanInfo) msg.obj;
                     TextView textView = new TextView(AntivirusActivity.this);
-                    if(info.isAntivirus){
+                    if(info.desc){
                         textView.setText(info.appName+" 有病毒");
                     }else{
                         textView.setText(info.appName+" 扫描安全");
@@ -91,7 +95,7 @@ public class AntivirusActivity extends Activity {
                     });
 
                     break;
-                case END:
+                case FINISH:
                     tv_text.setText("查杀完成");
                     //停止动画
                     iv_animimage.clearAnimation();
@@ -100,50 +104,90 @@ public class AntivirusActivity extends Activity {
 
         }
     };
-    private void initData(){
-        new Thread(){
-            @Override
+    private void initData() {
+
+        new Thread() {
+
             public void run() {
-                PackageManager packageManager = getPackageManager();
-                List<PackageInfo> installedPackages = packageManager.getInstalledPackages(0);
-                AntivirusDao dao = new AntivirusDao();
-                Message message = Message.obtain();
-                message.what=BEGIN;
-                handler.sendMessage(message);
-                pb_proce.setMax(installedPackages.size());
-                int progress=0;
-                for (PackageInfo packageInfo: installedPackages
-                        ) {
-                    String appName = packageInfo.applicationInfo.loadLabel(packageManager).toString();
-                    String dataDir = packageInfo.applicationInfo.dataDir;
-                    String md5 = MD5Utils.getFileMd5(dataDir);
-                    String desc = dao.getAntivirus(md5);
-                    message = Message.obtain();
-                    AntivirusInfo info = new AntivirusInfo();
-                    info.appName=appName;
-                    info.desc = desc;
-                    message.obj = info;
-                    message.what = SCANING;
-                    if(desc!=null){
-                        //是病毒应用
-                        info.isAntivirus = true;
-                    }else{
-                        info.isAntivirus = false;
-                    }
-                    handler.sendMessage(message);
-                    progress++;
-                    pb_proce.setProgress(progress);
-                    SystemClock.sleep(200);
-                }
+
                 message = Message.obtain();
-                message.what=END;
+
+                message.what = BEGING;
+
+                PackageManager packageManager = getPackageManager();
+                // 获取到所有安装的应用程序
+                List<PackageInfo> installedPackages = packageManager
+                        .getInstalledPackages(0);
+                // 返回手机上面安装了多少个应用程序
+                int size = installedPackages.size();
+                // 设置进度条的最大值
+                pb.setMax(size);
+
+                int progress = 0;
+
+                for (PackageInfo packageInfo : installedPackages) {
+
+                    ScanInfo scanInfo = new ScanInfo();
+
+                    // 获取到当前手机上面的app的名字
+                    String appName = packageInfo.applicationInfo.loadLabel(
+                            packageManager).toString();
+
+                    scanInfo.appName = appName;
+
+                    String packageName = packageInfo.applicationInfo.packageName;
+
+                    scanInfo.packageName = packageName;
+
+                    // 首先需要获取到每个应用程序的目录
+
+                    String sourceDir = packageInfo.applicationInfo.sourceDir;
+                    // 获取到文件的md5
+                    String md5 = MD5Utils.getFileMd5(sourceDir);
+                    // 判断当前的文件是否是病毒数据库里面
+                    String desc = AntivirusDao.getAntivirus(md5);
+
+                    System.out.println("-------------------------");
+
+                    System.out.println(appName);
+
+                    System.out.println(md5);
+
+                    // 如果当前的描述信息等于null说明没有病毒
+                    if (desc == null) {
+                        scanInfo.desc = false;
+                    } else {
+                        scanInfo.desc = true;
+                    }
+                    progress++;
+
+                    SystemClock.sleep(100);
+
+                    pb.setProgress(progress);
+
+                    message = Message.obtain();
+
+                    message.what = SCANING;
+
+                    message.obj = scanInfo;
+
+                    handler.sendMessage(message);
+
+                }
+
+                message = Message.obtain();
+
+                message.what = FINISH;
+
                 handler.sendMessage(message);
-            }
+            };
         }.start();
+
     }
-    static class AntivirusInfo{
-        String desc;
+
+    static class ScanInfo {
+        boolean desc;
         String appName;
-        boolean isAntivirus;
+        String packageName;
     }
 }
