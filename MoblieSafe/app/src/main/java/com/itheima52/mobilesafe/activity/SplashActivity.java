@@ -403,7 +403,7 @@ public class SplashActivity extends Activity {
 
 	public void copyDb(String dbName) {
 		// 要拷贝的目标地址
-		File file = new File(getFilesDir(), "address.db");
+		File file = new File(getFilesDir(), dbName);
 		if (file.exists()) {
 			System.out.println("数据库" + dbName + "已存在!");
 			return;
@@ -412,7 +412,7 @@ public class SplashActivity extends Activity {
 			OutputStream out = null;
 			try {
 				// 获取到项目路径下assets目录的文件
-				in = getAssets().open("address.db");
+				in = getAssets().open(dbName);
 				out = new FileOutputStream(file);
 				int len = 0;
 				byte[] buffer = new byte[1024];
