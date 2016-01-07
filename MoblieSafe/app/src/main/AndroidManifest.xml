@@ -131,13 +131,18 @@
                 <action android:name="com.itheima52.mobilesafe" />
             </intent-filter>
         </receiver>
+
         <service
             android:name=".service.KillProcesWidgetService"
             android:enabled="true"
             android:exported="true" >
         </service>
+
+        <activity android:name=".activity.AntivirusActivity" >
+        </activity>
         <activity
-            android:name=".activity.AntivirusActivity">
+            android:name=".activity.ApplockActivity"
+            android:label="@string/title_activity_applock" >
         </activity>
     </application>
 

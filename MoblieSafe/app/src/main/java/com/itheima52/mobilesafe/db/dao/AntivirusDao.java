@@ -11,7 +11,7 @@ public class AntivirusDao {
 
     public static final String PATH = "data/data/com.itheima52.mobilesafe/files/antivirus.db";
 
-    public String getAntivirus(String md5) {
+    public static String getAntivirus(String md5) {
         String desc = null;
         SQLiteDatabase db = SQLiteDatabase.openDatabase(PATH, null, SQLiteDatabase.OPEN_READONLY);
         Cursor cursor = db.rawQuery("select desc from datable where md5=?", new String[]{md5});
@@ -23,7 +23,7 @@ public class AntivirusDao {
         return desc;
     }
 
-    public void addVirus(String desc,String md5){
+    public static void addVirus(String desc,String md5){
         SQLiteDatabase db = SQLiteDatabase.openDatabase(PATH, null, SQLiteDatabase.OPEN_READWRITE);
         ContentValues contentValues = new ContentValues();
         contentValues.put("desc",desc);
