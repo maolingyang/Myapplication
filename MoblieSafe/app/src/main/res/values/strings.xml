@@ -10,5 +10,10 @@
     <string name="title_activity_app_manager">AppManagerActivity</string>
     <string name="title_activity_process_manager">ProcessManagerActivity</string>
     <string name="title_activity_process_setting">ProcessSettingActivity</string>
+    <string name="title_activity_applock">ApplockActivity</string>
+    <string name="title_activity_app_unlock">AppUnlockActivity</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

@@ -39,4 +39,22 @@
         android:padding="10dp"
         android:text="短信备份"
         android:textColor="@color/black" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#000"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button"
+        android:clickable="true"
+        android:drawableLeft="@android:drawable/ic_menu_camera"
+        android:drawablePadding="5dp"
+        android:gravity="center_vertical"
+        android:onClick="applock"
+        android:padding="10dp"
+        android:text="程序锁"
+        android:textColor="@color/black" />
 </LinearLayout>

@@ -1,14 +1,14 @@
 package com.itheima52.mobilesafe.activity;
 
-import com.itheima52.mobilesafe.R;
-import com.itheima52.mobilesafe.utils.SmsBackup;
-import com.itheima52.mobilesafe.utils.UIUtils;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+
+import com.itheima52.mobilesafe.R;
+import com.itheima52.mobilesafe.utils.SmsBackup;
+import com.itheima52.mobilesafe.utils.UIUtils;
 
 public class AToolsActivity extends Activity {
 
@@ -55,7 +55,9 @@ public class AToolsActivity extends Activity {
                 pd.dismiss();
             }
         }.start();
+    }
 
-
+    public void applock(View view){
+        
     }
 }
