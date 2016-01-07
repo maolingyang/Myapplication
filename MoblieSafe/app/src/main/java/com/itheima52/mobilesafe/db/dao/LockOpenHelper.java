@@ -19,7 +19,7 @@ public class LockOpenHelper extends SQLiteOpenHelper{
     }
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table lock (_id integer primary key autoincrement,packageName varchar(20)");
+        db.execSQL("create table lock (_id integer primary key autoincrement,packageName varchar(20))");
     }
 
 }

@@ -31,4 +31,10 @@ public class ApplockDao {
         }
         return  false;
     }
+
+    public void delete(String packageName){
+        SQLiteDatabase db = helper.getWritableDatabase();
+        db.delete("lock","packageName=?",new String[]{packageName});
+        db.close();
+    }
 }

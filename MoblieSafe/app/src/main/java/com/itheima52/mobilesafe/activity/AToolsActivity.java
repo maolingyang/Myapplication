@@ -58,6 +58,7 @@ public class AToolsActivity extends Activity {
     }
 
     public void applock(View view){
-        
+        Intent intent = new Intent(this,ApplockActivity.class);
+        startActivity(intent);
     }
 }
